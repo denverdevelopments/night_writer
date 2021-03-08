@@ -1,7 +1,8 @@
 class Line
+  attr_reader :text
 
-  def initialize
-
-  end 
+  def initialize(text)
+    @text = text
+  end
 
 end
