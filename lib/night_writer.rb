@@ -3,18 +3,29 @@ require './lib/line'
 
 
 print "Please enter the input file to convert to Braille:  "
-read_from = gets.chomp
+read_from = "lib/#{gets.chomp}.txt"
+
+print "Please enter the output file after the Braille conversion:  "
+write_to = "#{gets.chomp}.txt"
+
+
+# read_from = 'lib/messages.txt'
+# read_from = 'lib/sample_two.txt'
 
 all_lines = LineReader.new(read_from).complete
-# all_lines = LineGenerator.new('lib/messages.txt').complete
 
-# all_lines = LineReader.new('lib/sample_file.txt').complete
+File.open(write_to, "w") do |out|
+  out.write(all_lines[0].text)
+end
 
-File.open("output.txt", "w") {|out| out.write(all_lines[0].text)}
-
-file = File.open("output.txt")
+file = File.open(write_to)
 p file.read
-file.close
+
+# File.open("output.txt", "w") {|out| out.write(all_lines[0].text)}
+#
+# file = File.open("output.txt")
+# p file.read
+# file.close
 
 
 
