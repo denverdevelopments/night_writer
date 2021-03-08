@@ -10,6 +10,11 @@ require './lib/line'
 
 all_lines = LineReader.new('lib/sample_file.txt').complete
 
+File.open("output.txt", "w") {|out| out.write(all_lines[0].text)}
+
+file = File.open("output.txt")
+p file.read
+file.close
 
 
 # # file = File.open("users.txt")
