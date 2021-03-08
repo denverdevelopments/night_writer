@@ -21,3 +21,4 @@ Resulting in a confirmation message to terminal like below:
 ```
 $ ruby ./lib/night_reader.rb braille.txt original_message.txt
 Created 'original_message.txt' containing 256 characters.
+```
