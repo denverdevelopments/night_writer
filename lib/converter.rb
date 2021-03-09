@@ -1,5 +1,5 @@
 class Converter
-  attr_reader :all_lines
+  attr_reader :all_lines, :top, :middle, :bottom
   @@pairs = {
               "a" => ["0.", "..", ".."], "b" => ["0.", "0.", ".."],
               "c" => ["00", "..", ".."], "d" => ["00", ".0", ".."],
@@ -23,18 +23,45 @@ class Converter
   def initialize(all_lines)
     @all_lines = all_lines
     @rows = []
+    @top = []
+    @middle = []
+    @bottom = []
+    @converted = []
   end
 
   def to_braille
     @all_lines.each do |line|
+      # require "pry"; binding.pry
       if line.text.length <= 40
-        line.scan_line
+        scan_line(line.text)
       else
         last = line.text[40..-1]
         line = line.text[0..39]
-        line.scan_line
-        last.scan_line
+        scan_line(line)
+        scan_line(last)
       end
+    end
+  end
+
+  def scan_line(text_in)
+      text_in.split("").each do |character|
+        fill_array(character)
+      end
+      write_lines
+      File.write(ARGV[0], " \n\n\n\n", mode: "a")
+  end
+
+  def fill_array(character)
+    @top << @@pairs[character][0]
+    @middle << @@pairs[character][1]
+    @bottom << @@pairs[character][2]
+  end
+
+  def write_lines
+    File.open(ARGV[0], "w") do |out|
+      out.write("#{@top.join("")} \n")
+      out.write("#{@middle.join("")} \n")
+      out.write("#{@bottom.join("")} \n")
     end
   end
 
@@ -48,18 +75,21 @@ class Converter
       @rows << bit
     end
     @rows.each do |braille|
-      # print @@pairs.key(braille)
-      File.open(ARGV[0], "w") do |out|
-        out.write("{@@pairs.key(braille)}\n")
-      end
+      @converted << @@pairs.key(braille)
     end
+      File.open(ARGV[0], "w") do |out|
+        out.write("#{@converted.join("")}\n")
+      end
     # print "\n"
   end
 
   def get_count?
-    @all_lines.sum do |line|
-      line.text.length
-    end
+    @converted.join("").length || (@top.join("").length + @middle.join("") + @top.join("").length)
+    # @converted.join("").length || @all_lines.sum {|line| line.text.length}
+     # @all_lines.sum {|line| line.text.length} || @converted.join("").length
+    # @all_lines.sum do |line|
+    #   line.text.length
+    # end
   end
 # require "pry"; binding.pry
 end
