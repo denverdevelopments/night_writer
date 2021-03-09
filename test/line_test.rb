@@ -66,6 +66,7 @@ class LineTest < Minitest::Test
     assert_equal "..", line.all[2]
       expected = ["O.", "..", ".."]
     assert_equal expected, line.all
+    assert_equal 3, line.all.size
   end
 
 end
