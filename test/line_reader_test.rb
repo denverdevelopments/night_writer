@@ -55,18 +55,14 @@ class LineReaderTest < Minitest::Test
     read_from = "lib/row_braille_82.txt"
     reader = LineReader.new(read_from)
 
-    expected1 = "0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0."
-    expected2 = "................................................................................"
+    expected1 = "0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0.0."
+    expected2 = ".................................................................................."
 
-    assert_equal 80, reader.complete[0].text.length
+    assert_equal 82, reader.complete[0].text.length
     assert_equal expected1, reader.complete[0].text
-    assert_equal 80, reader.complete[1].text.length
+    assert_equal 82, reader.complete[1].text.length
     assert_equal expected2, reader.complete[1].text
-    assert_equal 80, reader.complete[2].text.length
+    assert_equal 82, reader.complete[2].text.length
     assert_equal expected2, reader.complete[2].text
-    assert_equal "0.", reader.complete[3].text
-    assert_equal "..", reader.complete[4].text
-    assert_equal "..", reader.complete[5].text
   end
-
 end
