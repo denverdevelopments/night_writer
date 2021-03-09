@@ -30,9 +30,9 @@ class Line
 
   def scan_line
     @text.split("").each do |character|
-      fill_top(char)
-      fill_middle(char)
-      fill_bottom(char)
+      fill_top(character)
+      fill_middle(character)
+      fill_bottom(character)
     end
     print_lines
   end
@@ -45,7 +45,22 @@ class Line
     # end
   end
 
-  def fill_top(char)
+  def fill_top(character)
+    @top << @@pairs[character][0]
+  end
+
+  def fill_middle(character)
+    @middle << @@pairs[character][1]
+  end
+
+  def fill_bottom(character)
+    @bottom << @@pairs[character][2]
+  end
+
+  def print_lines
+    puts @top.join("")
+    puts @middle.join("")
+    puts @bottom.join("")
   end
 
 end
