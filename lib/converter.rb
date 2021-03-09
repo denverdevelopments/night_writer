@@ -53,7 +53,7 @@ class Converter
     elsif @top.join("").length <= 80
       write_braille(39)
       append_braille(40,-1)
-    elsif @top.join("").length <= 120
+    else  #WAS if @top.join("").length <= 120
       write_braille(39)
       append_braille(40,79)
       append_braille(80,-1)

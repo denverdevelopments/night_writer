@@ -5,8 +5,9 @@ require './lib/converter'
 ## OPTION For User Inputs, instead of ARGV ##
 # print "Please enter the input file to convert to Braille:  "
 # read_from = "lib/#{gets.chomp}.txt"
+#
 # all_lines = LineReader.new(read_from).complete
-
+#
 # print "Please enter the output file after the Braille conversion:  "
 # write_to = "#{gets.chomp}.txt"
 
