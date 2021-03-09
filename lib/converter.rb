@@ -32,14 +32,14 @@ class Converter
   def to_braille
     @all_lines.each do |line|
       # require "pry"; binding.pry
-      if line.text.length <= 40
+      # if line.text.length <= 40
         scan_line(line.text)
-      else
-        last = line.text[40..-1]
-        line = line.text[0..39]
-        scan_line(line)
-        scan_line(last)
-      end
+      # else
+      #   last = line.text[40..-1]
+      #   line = line.text[0..39]
+      #   scan_line(line)
+      #   scan_line(last)
+      # end
     end
   end
 
@@ -58,10 +58,36 @@ class Converter
   end
 
   def write_lines
+    if @top.join("").length <= 40
+      write_file
+    elsif @top.join("").length <= 80
+      write_file
+      append_file(80,-1)
+    elsif @top.join("").length <= 120
+      write_file
+      append_file(80,119)
+      append_file(120,-1)
+    elsif @top.join("").length <= 160
+      write_file
+      append_file(80,119)
+      append_file(120,159)
+      append_file(160,-1)
+    end
+  end
+
+  def write_file
     File.open(ARGV[0], "w") do |out|
-      out.write("#{@top.join("")} \n")
-      out.write("#{@middle.join("")} \n")
-      out.write("#{@bottom.join("")} \n")
+      out << "#{@top.join("")[0..79]} \n"
+      out << "#{@middle.join("")[0..79]} \n"
+      out << "#{@bottom.join("")[0..79]} \n"
+    end
+  end
+
+  def append_file(start, stop)
+    File.open(ARGV[0], "a") do |out|
+      out << "#{@top.join("")[start..stop]} \n"
+      out << "#{@middle.join("")[start..stop]} \n"
+      out << "#{@bottom.join("")[start..stop]} \n"
     end
   end
 
@@ -84,12 +110,12 @@ class Converter
   end
 
   def get_count?
-    @converted.join("").length || (@top.join("").length + @middle.join("") + @top.join("").length)
+    # @converted.join("").length || (@top.join("").length + @middle.join("") + @top.join("").length)
     # @converted.join("").length || @all_lines.sum {|line| line.text.length}
      # @all_lines.sum {|line| line.text.length} || @converted.join("").length
-    # @all_lines.sum do |line|
-    #   line.text.length
-    # end
+    @all_lines.sum do |line|
+      line.text.length
+    end
   end
 # require "pry"; binding.pry
 end
