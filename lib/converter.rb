@@ -50,14 +50,18 @@ class Converter
 
   def write_lines
     if @top.join("").length <= 40
-      write_file(-1)
+      write_braille(-1)
     elsif @top.join("").length <= 80
-      write_file(79)
-      append_file(80,-1)
+      write_braille(39)
+      append_braille(40,-1)
+    elsif @top.join("").length <= 120
+      write_braille(39)
+      append_braille(40,79)
+      append_braille(80,-1)
     end
   end
 
-  def write_file(stop)
+  def write_braille(stop)
     File.open(ARGV[0], "w") do |out|
       out << "#{@top.join("")[0..stop]}\n"
       out << "#{@middle.join("")[0..stop]}\n"
@@ -65,7 +69,7 @@ class Converter
     end
   end
 
-  def append_file(start, stop)
+  def append_braille(start, stop)
     File.open(ARGV[0], "a") do |out|
       out << "#{@top.join("")[start..stop]}\n"
       out << "#{@middle.join("")[start..stop]}\n"
@@ -86,17 +90,32 @@ class Converter
       @converted << @@pairs.key(braille)
     end
     width = @converted.join("").length
-    if width <= 40
-      File.open(ARGV[0], "w") do |out|
-        out << "#{@converted.join("")}\n"
-      end
-    elsif width > 40 && width <= 80
-      File.open(ARGV[0], "w") do |out|
-        out << "#{@converted.join("")[0..39]}\n"
-      end
-      File.open(ARGV[0], "a") do |out|
-        out << "#{@converted.join("")[40..-1]}\n"
-      end
+    if @converted.join("").length <= 40
+      write_english(-1)
+    elsif @converted.join("").length <= 80
+      write_english(39)
+      append_english(40, -1)
+    elsif @converted.join("").length <= 120
+      write_english(39)
+      append_english(40, 79)
+      append_english(80, -1)
+    elsif @converted.join("").length <= 160
+      write_english(39)
+      append_english(40, 79)
+      append_english(80, 119)
+      append_english(120, -1)
+    end
+  end
+
+  def write_english(stop)
+    File.open(ARGV[0], "w") do |out|
+      out << "#{@converted.join("")[0..stop]}\n"
+    end
+  end
+
+  def append_english(start, stop)
+    File.open(ARGV[0], "a") do |out|
+      out << "#{@converted.join("")[start..stop]}\n"
     end
   end
 
@@ -105,5 +124,15 @@ class Converter
       line.text.length
     end
   end
-# require "pry"; binding.pry
+
+  # def is_capitalized?     ## psuedo
+  #   if character = character.upcase
+  #     @row << ["..", "..", ".0"]
+  #   else
+  #     @top << ".."
+  #     @middle << ".."
+  #     @bottom << ".0"
+  #   end
+  # end
+
 end
