@@ -22,7 +22,6 @@ class Converter
 
   def initialize(all_lines)
     @all_lines = all_lines
-    @rows = []
     @top = []
     @middle = []
     @bottom = []
@@ -62,7 +61,7 @@ class Converter
   end
 
   def write_braille(stop)
-    File.open(ARGV[0], "w") do |out|
+    File.open(ARGV[1], "w") do |out|
       out << "#{@top.join("")[0..stop]}\n"
       out << "#{@middle.join("")[0..stop]}\n"
       out << "#{@bottom.join("")[0..stop]}\n"
@@ -70,7 +69,7 @@ class Converter
   end
 
   def append_braille(start, stop)
-    File.open(ARGV[0], "a") do |out|
+    File.open(ARGV[1], "a") do |out|
       out << "#{@top.join("")[start..stop]}\n"
       out << "#{@middle.join("")[start..stop]}\n"
       out << "#{@bottom.join("")[start..stop]}\n"
@@ -78,18 +77,18 @@ class Converter
   end
 
   def to_english
+    rows = []
     cycles = @all_lines[0].text.length / 2
     cycles.times do |index|
       bit = []
       bit << @all_lines[0].text[(2*index)..(2*index+1)]
       bit << @all_lines[1].text[(2*index)..(2*index+1)]
       bit << @all_lines[2].text[(2*index)..(2*index+1)]
-      @rows << bit
+      rows << bit
     end
-    @rows.each do |braille|
+    rows.each do |braille|
       @converted << @@pairs.key(braille)
     end
-    width = @converted.join("").length
     if @converted.join("").length <= 40
       write_english(-1)
     elsif @converted.join("").length <= 80
@@ -108,13 +107,13 @@ class Converter
   end
 
   def write_english(stop)
-    File.open(ARGV[0], "w") do |out|
+    File.open(ARGV[1], "w") do |out|
       out << "#{@converted.join("")[0..stop]}\n"
     end
   end
 
   def append_english(start, stop)
-    File.open(ARGV[0], "a") do |out|
+    File.open(ARGV[1], "a") do |out|
       out << "#{@converted.join("")[start..stop]}\n"
     end
   end
