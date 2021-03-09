@@ -14,20 +14,29 @@ require './lib/converter'
 # write_to = "#{gets.chomp}.txt"
 
 
-all_lines = LineReader.new(ARGV[0]).complete
-# all_lines = LineReader.new(read_from).complete
+# read_from = 'lib/messages.txt'
+read_from = 'lib/sample_two.txt'
+
+# all_lines = LineReader.new(ARGV[0]).complete
+all_lines = LineReader.new(read_from).complete
 
 converter = Converter.new(all_lines)
-converter.to_braille
+# converter.to_braille
 
 
-# write_to = "braille.txt"
+write_to = "braille.txt"
 
-File.open(ARGV[1], "w") do |out|
-  out.write(all_lines[0].text)    ##.join(" ")
+# File.open(ARGV[1], "w") do |out|
+File.open(write_to, "w") do |out|
+  all_lines.each do |line|
+    out.write("#{line.text}\n")
+  end
+  # out.write(all_lines.map {|line| line.text})
+  # out.write(all_lines[0].text)    ##.join(" ")
 end
 
-file = File.open(ARGV[1])
+# file = File.open(ARGV[1])
+file = File.open(write_to)
 p file.read
 
 # File.open("output.txt", "w") {|out| out.write(all_lines[0].text)}
@@ -45,4 +54,3 @@ p file.read
 # file_data = File.read("user.txt").split
 # # ["user1", "user2", "user3"]
 #
-# File.foreach("users.txt") { |line| puts line }
