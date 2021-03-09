@@ -1,48 +1,53 @@
 class Line
-  attr_reader :text, :top, :middle, :bottom, :all
+  attr_reader :text, :top, :middle, :bottom
   @@pairs = {
-              "a" => ["O.", "..", ".."], "b" => ["O.", "O.", ".."],
-              "c" => ["OO", "..", ".."], "d" => ["OO", ".O", ".."],
-              "e" => ["O.", ".O", ".."], "f" => ["OO", "O.", ".."],
-              "g" => ["OO", "OO", ".."], "h" => ["O.", "OO", ".."],
-              "i" => [".O", "O.", ".."], "j" => [".O", "OO", ".."],
-              "k" => ["O.", "..", "O."], "l" => ["O.", "O.", "O."],
-              "m" => ["OO", "..", "O."], "n" => ["OO", ".O", "O."],
-              "o" => ["O.", ".O", "O."], "p" => ["OO", "O.", "O."],
-              "q" => ["OO", "OO", "O."], "r" => ["O.", "OO", "O."],
-              "s" => [".O", "O.", "O."], "t" => [".O", "OO", "O."],
-              "u" => ["O.", "..", "OO"], "v" => ["O.", "O.", "OO"],
-              "w" => [".O", "OO", ".O"], "x" => ["OO", "..", "OO"],
-              "y" => ["OO", ".0", "OO"], "z" => ["O.", ".O", "OO"],
-              "!" => ["..", "O0", "O."], "'" => ["..", "..", "O."],
-              "," => ["..", "O.", ".."], "-" => ["..", "..", "OO"],
-              "." => ["..", "OO", ".O"], "?" => ["..", "O.", "OO"],
+              "a" => ["0.", "..", ".."], "b" => ["0.", "0.", ".."],
+              "c" => ["00", "..", ".."], "d" => ["00", ".0", ".."],
+              "e" => ["0.", ".0", ".."], "f" => ["00", "0.", ".."],
+              "g" => ["00", "00", ".."], "h" => ["0.", "00", ".."],
+              "i" => [".0", "0.", ".."], "j" => [".0", "00", ".."],
+              "k" => ["0.", "..", "0."], "l" => ["0.", "0.", "0."],
+              "m" => ["00", "..", "0."], "n" => ["00", ".0", "0."],
+              "o" => ["0.", ".0", "0."], "p" => ["00", "0.", "0."],
+              "q" => ["00", "00", "0."], "r" => ["0.", "00", "0."],
+              "s" => [".0", "0.", "0."], "t" => [".0", "00", "0."],
+              "u" => ["0.", "..", "00"], "v" => ["0.", "0.", "00"],
+              "w" => [".0", "00", ".0"], "x" => ["00", "..", "00"],
+              "y" => ["00", ".0", "00"], "z" => ["0.", ".0", "00"],
+              "!" => ["..", "00", "0."], "'" => ["..", "..", "0."],
+              "," => ["..", "0.", ".."], "-" => ["..", "..", "00"],
+              "." => ["..", "00", ".0"], "?" => ["..", "0.", "00"],
               " " => ["..", "..", ".."]
             }
 
-  def initialize(text)
+  def initialize(text="")
     @text = text
     @top = []
     @middle = []
     @bottom = []
-    @all = []
   end
 
   def scan_line
-    @text.split("").each do |character|
-      fill_top(character)
-      fill_middle(character)
-      fill_bottom(character)
+    if @text.length <= 40
+      @text.split("").each do |character|
+        require "pry"; binding.pry
+        fill_top(character)
+        fill_middle(character)
+        fill_bottom(character)
+      end
+      write_lines
+      File.write(ARGV[0], " \n\n\n\n", mode: "a")
+    else
+      cut = @text[0..39]
+      cut.split("").each do |character|
+        require "pry"; binding.pry
+        fill_top(character)
+        fill_middle(character)
+        fill_bottom(character)
+      end
+      write_lines
+      File.write(ARGV[0], " \n\n\n\n", mode: "a")
     end
-    print_lines
-  end
-
-  def scan_row
-    cycles = @text.length / 2
-    @all << @text
-    # @text.split("").each do |char|
-    #
-    # end
   end
 
   def fill_top(character)
@@ -57,10 +62,12 @@ class Line
     @bottom << @@pairs[character][2]
   end
 
-  def print_lines
-    puts @top.join("")
-    puts @middle.join("")
-    puts @bottom.join("")
+  def write_lines
+    File.open(ARGV[0], "w") do |out|
+      out.write("#{@top.join("")}\n")
+      out.write("#{@middle.join("")}\n")
+      out.write("#{@bottom.join("")}\n")
+    end
   end
 
 end
