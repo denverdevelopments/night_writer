@@ -5,14 +5,14 @@ require './lib/converter'
 
 # print "Please enter the input file to convert to Braille:  "
 # read_from = "lib/#{gets.chomp}.txt"
-#
+
 # print "Please enter the output file after the Braille conversion:  "
 # write_to = "#{gets.chomp}.txt"
 
 
-read_from = 'lib/paragraph_multi.txt'
+# read_from = 'lib/paragraph_multi.txt'
 # read_from = 'lib/messages.txt'
-# read_from = 'lib/sample_two.txt'
+read_from = 'lib/sample_two.txt'
 
 # all_lines = LineReader.new(ARGV[0]).complete
 all_lines = LineReader.new(read_from).complete
@@ -32,7 +32,7 @@ converter.to_braille
 #   # out.write(all_lines[0].text)    ##.join(" ")
 # end
 
-puts "Created 'braille.txt' containing #{converter.get_count?} characters"
+puts "Created '#{ARGV[0]}' containing #{converter.get_count?*6} characters"
 
 # file = File.open(ARGV[1])
 # file = File.open(write_to)

@@ -31,15 +31,7 @@ class Converter
 
   def to_braille
     @all_lines.each do |line|
-      # require "pry"; binding.pry
-      # if line.text.length <= 40
-        scan_line(line.text)
-      # else
-      #   last = line.text[40..-1]
-      #   line = line.text[0..39]
-      #   scan_line(line)
-      #   scan_line(last)
-      # end
+      scan_line(line.text)
     end
   end
 
@@ -48,7 +40,6 @@ class Converter
         fill_array(character)
       end
       write_lines
-      File.write(ARGV[0], " \n\n\n\n", mode: "a")
   end
 
   def fill_array(character)
@@ -59,35 +50,26 @@ class Converter
 
   def write_lines
     if @top.join("").length <= 40
-      write_file
+      write_file(-1)
     elsif @top.join("").length <= 80
-      write_file
+      write_file(79)
       append_file(80,-1)
-    elsif @top.join("").length <= 120
-      write_file
-      append_file(80,119)
-      append_file(120,-1)
-    elsif @top.join("").length <= 160
-      write_file
-      append_file(80,119)
-      append_file(120,159)
-      append_file(160,-1)
     end
   end
 
-  def write_file
+  def write_file(stop)
     File.open(ARGV[0], "w") do |out|
-      out << "#{@top.join("")[0..79]} \n"
-      out << "#{@middle.join("")[0..79]} \n"
-      out << "#{@bottom.join("")[0..79]} \n"
+      out << "#{@top.join("")[0..stop]}\n"
+      out << "#{@middle.join("")[0..stop]}\n"
+      out << "#{@bottom.join("")[0..stop]}\n"
     end
   end
 
   def append_file(start, stop)
     File.open(ARGV[0], "a") do |out|
-      out << "#{@top.join("")[start..stop]} \n"
-      out << "#{@middle.join("")[start..stop]} \n"
-      out << "#{@bottom.join("")[start..stop]} \n"
+      out << "#{@top.join("")[start..stop]}\n"
+      out << "#{@middle.join("")[start..stop]}\n"
+      out << "#{@bottom.join("")[start..stop]}\n"
     end
   end
 
@@ -103,16 +85,22 @@ class Converter
     @rows.each do |braille|
       @converted << @@pairs.key(braille)
     end
+    width = @converted.join("").length
+    if width <= 40
       File.open(ARGV[0], "w") do |out|
-        out.write("#{@converted.join("")}\n")
+        out << "#{@converted.join("")}\n"
       end
-    # print "\n"
+    elsif width > 40 && width <= 80
+      File.open(ARGV[0], "w") do |out|
+        out << "#{@converted.join("")[0..39]}\n"
+      end
+      File.open(ARGV[0], "a") do |out|
+        out << "#{@converted.join("")[40..-1]}\n"
+      end
+    end
   end
 
   def get_count?
-    # @converted.join("").length || (@top.join("").length + @middle.join("") + @top.join("").length)
-    # @converted.join("").length || @all_lines.sum {|line| line.text.length}
-     # @all_lines.sum {|line| line.text.length} || @converted.join("").length
     @all_lines.sum do |line|
       line.text.length
     end
